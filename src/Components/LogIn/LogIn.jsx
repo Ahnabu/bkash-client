@@ -1,12 +1,13 @@
 import axios from "axios"
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../Utils/useAuthProvider";
 import swal from 'sweetalert'
 
 export function LogIn() {
     const { setUser } = useAuth()
     const [error, setError] = useState()
+    const navigate = useNavigate()
     const handleLogIn = async (event) => {
         event.preventDefault();
        
@@ -38,6 +39,7 @@ export function LogIn() {
                                         localStorage.setItem('access-token', res.data.token)
                                     }
                                 })
+                            navigate('/dashboard', { replace: true })
 
                         }
                         else {

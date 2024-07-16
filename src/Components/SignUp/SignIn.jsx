@@ -1,13 +1,14 @@
 import axios from "axios"
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../Utils/useAuthProvider";
 import swal from "sweetalert";
 
 
 export function SignIn() {
     const {setUser}=useAuth()
-    const [error,setError]=useState()
+    const [error, setError] = useState()
+    const navigate = useNavigate()
     const handleSignUp = async (event) => {
         event.preventDefault();
         const password = event.target.password.value;
@@ -21,11 +22,11 @@ export function SignIn() {
             password: event.target.password.value,
             phone: event.target.phone.value,
         };
-        console.log(newUser);
+        
         try {
             axios.post(`${import.meta.env.VITE_API_URL}/users`, newUser)
                 .then(data => {
-                    console.log(data.data);
+                    
                     if (data.data.status == 200) {
                        
                         event.target.reset()
@@ -45,6 +46,7 @@ export function SignIn() {
                                         localStorage.setItem('access-token', res.data.token)
                                     }
                                 })
+                            navigate( '/dashboard', { replace: true })
                         }
                         else {
                             localStorage.removeItem('access-token')

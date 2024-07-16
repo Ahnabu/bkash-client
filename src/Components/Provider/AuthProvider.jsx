@@ -1,12 +1,12 @@
 
 
 /* eslint-disable react/prop-types */
+import axios from "axios";
 import { createContext,  useState } from "react";
 
+import swal from 'sweetalert';
 
 
-
-// import axios from "axios";
 
 export const AuthContext = createContext(null)
 
@@ -19,31 +19,32 @@ const AuthProvider = ({ children }) => {
     const [state, setState] = useState(true)
    
    
-    // const LogOut = () => {
+    const LogOut = () => {
 
-    //     signOut(auth)
-    //         .then(async () => {
+        axios.get(`${import.meta.env.VITE_API_URL}/logout`)
+            .then(async () => {
 
-    //             // const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/logout`, { withCredentials: true })
+                // const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/logout`, { withCredentials: true })
 
-    //             setUser(null)
-    //             Swal.fire({
-    //                 title: 'Success',
-    //                 text: 'Successfully singed out',
-    //                 icon: 'success',
-    //                 timer: 1500
-    //             })
-    //         })
+                setUser(null)
+                swal({
+                    title: 'Success',
+                    text: 'Successfully logged in',
+                    icon: 'success',
+                    timer: 1500
+                })
+                localStorage.removeItem('access-token')
+            })
 
-    //         .catch(error => Swal.fire({
-    //             title: 'Error!',
-    //             text: error.message,
-    //             icon: 'error',
-    //             timer: 1500
-    //         }));
+            .catch(error => swal({
+                title: 'Error!',
+                text: error.message,
+                icon: 'error',
+                timer: 1500
+            }));
 
 
-    // }
+    }
 
 
 
@@ -53,7 +54,7 @@ const AuthProvider = ({ children }) => {
 
       
         setLoading,
-        // LogOut,
+        LogOut,
         
         loading,
 
