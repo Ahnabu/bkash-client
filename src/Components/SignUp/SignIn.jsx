@@ -2,7 +2,8 @@ import axios from "axios"
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import useAuth from "../../Utils/useAuthProvider";
-import Swal from "sweetalert2";
+import swal from "sweetalert";
+
 
 export function SignIn() {
     const {setUser}=useAuth()
@@ -21,34 +22,40 @@ export function SignIn() {
             phone: event.target.phone.value,
         };
         console.log(newUser);
-        axios.post(`${import.meta.env.VITE_API_URL}/users`, newUser)
-            .then(data => {
-                console.log(data.data);
-                if (data.data.status == 200) {
-                    event.target.reset()
-                    setUser(data.data)
-                    Swal.fire({
-                        title: 'Success',
-                        text: 'Successfully singed in',
-                        icon: 'success',
-                        timer: 1500
-                    })
-                    const currentUser = data.data
-                    if (currentUser) {
-                        const userInfo = { email: currentUser.email }
-                        axios.post('/jwt', userInfo)
-                            .then(res => {
-                                if (res.data.token) {
-                                    localStorage.setItem('access-token', res.data.token)
-                                }
-                            })
-
+        try {
+            axios.post(`${import.meta.env.VITE_API_URL}/users`, newUser)
+                .then(data => {
+                    console.log(data.data);
+                    if (data.data.status == 200) {
+                       
+                        event.target.reset()
+                        setUser(data.data)
+                        swal({
+                            title: 'Success',
+                            text: 'Successfully logged in',
+                            icon: 'success',
+                            timer: 1500
+                        })
+                        const currentUser = data.data
+                        if (currentUser) {
+                            const userInfo = { email: currentUser.email }
+                            axios.post(`${import.meta.env.VITE_API_URL}/jwt`, userInfo)
+                                .then(res => {
+                                    if (res.data.token) {
+                                        localStorage.setItem('access-token', res.data.token)
+                                    }
+                                })
+                        }
+                        else {
+                            localStorage.removeItem('access-token')
+                        }
                     }
-                    else {
-                        localStorage.removeItem('access-token')
-                    }
-                }
-            })
+                })
+        } catch (error) {
+            console.log(error);
+            setError(error)
+        }
+       
     };
 
     return (
@@ -117,8 +124,8 @@ export function SignIn() {
                         
                         <h6 className="my-12 text-center text-white">
                             Already have account ?{" "}
-                            <Link className="text-primary font-semibold" href={"/login"}>
-                                Sign In
+                            <Link className="text-primary font-semibold" to={"/"}>
+                                Log In
                             </Link>
                         </h6>
                     </div>

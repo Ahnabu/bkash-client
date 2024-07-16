@@ -2,7 +2,7 @@ import axios from "axios"
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import useAuth from "../../Utils/useAuthProvider";
-import Swal from "sweetalert2";
+import swal from 'sweetalert'
 
 export function LogIn() {
     const { setUser } = useAuth()
@@ -23,7 +23,7 @@ export function LogIn() {
                     if (data.data.status == 200) {
                         event.target.reset()
                         setUser(data.data)
-                        Swal.fire({
+                        swal({
                             title: 'Success',
                             text: 'Successfully logged in',
                             icon: 'success',
@@ -32,7 +32,7 @@ export function LogIn() {
                         const currentUser = data.data
                         if (currentUser) {
                             const userInfo = { email: currentUser.email }
-                            axios.post('/jwt', userInfo)
+                            axios.post(`${import.meta.env.VITE_API_URL}/jwt`, userInfo)
                                 .then(res => {
                                     if (res.data.token) {
                                         localStorage.setItem('access-token', res.data.token)
@@ -64,7 +64,7 @@ export function LogIn() {
                         
                     />
                     <p className="text-3xl mt-4 ">
-                        Create a new Bkash Account
+                        LogIn to your Bkash Account
                     </p>
                 </div>
                 <div className="border-2 p-12 text-black">

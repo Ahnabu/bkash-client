@@ -5,7 +5,7 @@ import {
 } from "react-router-dom";
 import "./index.css";
 import { router } from './Routes/router';
-import AuthProvider from '../public/Provider/AuthProvider';
+import AuthProvider from './Components/Provider/AuthProvider';
 
 
 
