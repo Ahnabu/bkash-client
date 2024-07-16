@@ -13,7 +13,7 @@ const LoadingSpinner = ({ smallHeight }) => {
      
       `}
         >
-            <ScaleLoader size={100} className="text-primary" color='rgb(70 195 235 / var(--tw-text-opacity))' />
+            <ScaleLoader size={100} className="text-primary" color=' rgb(226 19 110 / var(--tw-text-opacity))' />
         </div>
     )
 }

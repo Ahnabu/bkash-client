@@ -5,7 +5,7 @@ import useAuth from "../../Utils/useAuthProvider";
 import swal from 'sweetalert'
 
 export function LogIn() {
-    const { setUser } = useAuth()
+    const { setUser,setLoading } = useAuth()
     const [error, setError] = useState()
     const navigate = useNavigate()
     const handleLogIn = async (event) => {
@@ -16,7 +16,7 @@ export function LogIn() {
             phone: event.target.phone.value,
         };
        
-        console.log(newUser);
+       
         try {
             axios.get(`${import.meta.env.VITE_API_URL}/users?phone=${newUser.phone}&password=${newUser.password}`)
                 .then(data => {
@@ -37,10 +37,11 @@ export function LogIn() {
                                 .then(res => {
                                     if (res.data.token) {
                                         localStorage.setItem('access-token', res.data.token)
+                                        setUser(data.data)
                                     }
                                 })
                             navigate('/dashboard', { replace: true })
-
+                                setLoading(false)
                         }
                         else {
                             localStorage.removeItem('access-token')

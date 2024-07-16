@@ -6,7 +6,7 @@ import swal from "sweetalert";
 
 
 export function SignIn() {
-    const {setUser}=useAuth()
+    const {setUser,setLoading}=useAuth()
     const [error, setError] = useState()
     const navigate = useNavigate()
     const handleSignUp = async (event) => {
@@ -46,7 +46,9 @@ export function SignIn() {
                                         localStorage.setItem('access-token', res.data.token)
                                     }
                                 })
-                            navigate( '/dashboard', { replace: true })
+                            
+                            navigate('/dashboard', { replace: true })
+                            setLoading(false)
                         }
                         else {
                             localStorage.removeItem('access-token')

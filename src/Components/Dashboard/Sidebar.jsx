@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { GrLogout } from 'react-icons/gr'
-import { CgProfile } from "react-icons/cg";
+// import { CgProfile } from "react-icons/cg";
 
 import { Link } from 'react-router-dom'
 
@@ -11,7 +11,7 @@ import MenuItem from './Menu/MenuItem';
 import useAuth from '../../Utils/useAuthProvider';
 import useRole from '../../Utils/useRole';
 const Sidebar = () => {
-    const { LogOut} = useAuth()
+    const { user,LogOut} = useAuth()
     const [isActive, setActive] = useState(false)
 
     const [role, isLoading] = useRole()
@@ -32,7 +32,7 @@ const Sidebar = () => {
                         <Link to='/'>
                             <img
                                 // className='hidden md:block'
-                                src='/logo.jpeg'
+                                src='/bkash-icon.png'
                                 alt='logo'
                                 width='24'
                                 height='24'
@@ -86,51 +86,58 @@ const Sidebar = () => {
             >
 
                 <div>
-
+                    {/* logo  */}
                     <div>
 
                         <div className='w-full hidden md:flex px-4 py-2 shadow-lg rounded-lg justify-center items-center  mx-auto'>
-                            <Link to='/'>
-                                <div className='flex gap-1'>
-                                    <img src="/logo.jpeg" alt="" className='w-6 h-6' />
-                                    <h3 className='text-white font-bold text-xl'>Health Caduceus </h3>
+                            <Link to='/dashboard'>
+                                <div className='flex gap-1 items-center'>
+                                    <img src="/bkash-icon.png" alt="" className='w-6 h-6' />
+                                    <h3 className='text-white font-bold text-xl'>Bkash</h3>
 
                                 </div>
                             </Link>
 
                         </div>
+                        <div className='pt-4 mx-auto'>
+                            <p className='text-xl'>
+                                {user.name}
+                            </p>
+                            <p className='pt-2'>
+                             Number: {user.phone}
+                            </p>
+                        </div>
                     </div>
-
-                    {/* Nav Items */}
-                    <div className='flex flex-col justify-between flex-1 rounded mt-6'>
-                        {/* Conditional toggle button here.. */}
-
-                        {/*  Menu Items */}
-                        <nav>
-
-                            <MenuItem
-                                label='Home'
-                                address='/'
-                                className="rounded"
-                                icon={IoMdHome}
-                            />
-                            {/* {role === 'User' && <UserMenu />}
-
-                            {role === 'Organizer' && <OrganizerMenu />} */}
-                        </nav>
-                    </div>
+                  
                 </div>
 
                 <div>
+                    <div>
+                        
+
+                        {/* Nav Items */}
+                        <div className='flex flex-col justify-between flex-1 rounded mt-6'>
+                            {/* Conditional toggle button here.. */}
+
+                            {/*  Menu Items */}
+                            <nav>
+
+                                <MenuItem
+                                    label='Home'
+                                    address='/dashboard'
+                                    className="rounded"
+                                    icon={IoMdHome}
+                                />
+                                {/* {role === 'User' && <UserMenu />}
+
+                            {role === 'Organizer' && <OrganizerMenu />} */}
+                            </nav>
+                        </div>
+                    </div>
                     <hr />
 
                     {/* Profile Menu */}
-                    <MenuItem
-                        label='Profile'
-                        address='/dashboard'
-
-                        icon={CgProfile}
-                    />
+                    
 
                     <button
                         onClick={LogOut}
