@@ -6,31 +6,37 @@ import swal from 'sweetalert';
 export const AuthContext = createContext(null);
 
 const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user-data')) || null);
     const [loading, setLoading] = useState(true);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-    console.log(user);
+
     useEffect(() => {
         const checkAuthentication = async () => {
-            console.log(user);
+            if (user == null || user == undefined) {
+               await setUser(JSON.parse(localStorage.getItem('user-data'))) 
+                console.log(user);
+            }
             const token = localStorage.getItem('access-token');
             if (token) {
                 try {
                     const response = await axios.post(`${import.meta.env.VITE_API_URL}/jwt`, {}, {
                         headers: { Authorization: `Bearer ${token}` },
                     });
-                    console.log(response.data);
                     if (response.data.token) {
                         setIsAuthenticated(true);
-                        // setUser(response.data.user);
-                    
-                        // Assuming the response contains user data
+                        if (!user) {
+                            // Set user data if not already set
+                            setUser(JSON.parse(localStorage.getItem('user-data')))
+                        }
+                        
                     } else {
                         localStorage.removeItem('access-token');
+                        localStorage.removeItem('user-data');
                     }
                 } catch (error) {
                     console.error('Token verification failed:', error);
                     localStorage.removeItem('access-token');
+                    localStorage.removeItem('user-data');
                 }
             }
             setLoading(false);
@@ -45,6 +51,7 @@ const AuthProvider = ({ children }) => {
             setUser(null);
             setIsAuthenticated(false);
             localStorage.removeItem('access-token');
+            localStorage.removeItem('user-data');
             swal({
                 title: 'Success',
                 text: 'Successfully logged out',

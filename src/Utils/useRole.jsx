@@ -1,25 +1,34 @@
-
-import useAuth from './useAuthProvider'
-import useAxiosSecure from './useAxiosSecure'
-import { useQuery } from '@tanstack/react-query'
+import useAuth from './useAuthProvider';
+import useAxiosSecure from './useAxiosSecure';
+import { useQuery } from '@tanstack/react-query';
 
 const useRole = () => {
-    
-    const { user, loading } = useAuth()
-    const axiosSecure = useAxiosSecure()
+    const { user, loading } = useAuth();
+    const axiosSecure = useAxiosSecure();
 
-    const { data: role = '', isLoading } = useQuery({
-        queryKey: ['role', user?.email],
-        enabled: !loading && !!user?.email,
+    const { data: role = '', isLoading, error } = useQuery({
+        queryKey: ['role', user?.phone],
+        enabled: !loading && !!user?.phone,
         queryFn: async () => {
-            const { data } = await axiosSecure(`/users/${user?.email}`)
-            return data.role
+            try {
+                const response = await axiosSecure(`/users/${user?.phone}`);
+                const { data } = response;
+                if (!data || !data.role) {
+                    throw new Error('Role data is missing or undefined');
+                }
+                return data.role;
+            } catch (error) {
+                console.error('Error fetching user role:', error);
+                throw error;
+            }
         },
-    })
+    });
 
-    //   Fetch user info using logged in user email
+    if (error) {
+        console.error('Error in useRole hook:', error);
+    }
 
-    return [role, isLoading]
-}
+    return [role, isLoading];
+};
 
-export default useRole
+export default useRole;

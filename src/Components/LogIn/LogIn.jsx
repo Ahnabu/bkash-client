@@ -1,58 +1,54 @@
-import axios from "axios"
+import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../Utils/useAuthProvider";
-import swal from 'sweetalert'
+import swal from 'sweetalert';
 
 export function LogIn() {
-    const { setUser,setLoading } = useAuth()
-    const [error, setError] = useState()
-    const navigate = useNavigate()
+    const { setLoading, setUser } = useAuth();
+    const [error, setError] = useState(null);
+    const navigate = useNavigate();
+
     const handleLogIn = async (event) => {
         event.preventDefault();
-       
+
         const newUser = {
             password: event.target.password.value,
             phone: event.target.phone.value,
         };
-       
-       
+
+        setLoading(true);
         try {
-            axios.get(`${import.meta.env.VITE_API_URL}/users?phone=${newUser.phone}&password=${newUser.password}`)
-                .then(data => {
-                    console.log(data.data);
-                    if (data.data.status == 200) {
-                        event.target.reset()
-                        setUser(data.data)
-                        swal({
-                            title: 'Success',
-                            text: 'Successfully logged in',
-                            icon: 'success',
-                            timer: 1500
-                        })
-                        const currentUser = data.data
-                        if (currentUser) {
-                            const userInfo = { email: currentUser.email }
-                            axios.post(`${import.meta.env.VITE_API_URL}/jwt`, userInfo)
-                                .then(res => {
-                                    if (res.data.token) {
-                                        localStorage.setItem('access-token', res.data.token)
-                                        setUser(data.data)
-                                    }
-                                })
-                            navigate('/dashboard', { replace: true })
-                                setLoading(false)
-                        }
-                        else {
-                            localStorage.removeItem('access-token')
-                        }
-                    }
-                })
+            const response = await  axios.get(`${import.meta.env.VITE_API_URL}/users?phone=${newUser.phone}&password=${newUser.password}`);
+            const data = response.data;
+            if (data.status === 200) {
+                swal({
+                    title: 'Success',
+                    text: 'Successfully logged in',
+                    icon: 'success',
+                    timer: 1500
+                });
+
+                localStorage.setItem('user-data', JSON.stringify(data));
+                setUser(data);
+
+                const userInfo = { email: data.email };
+                const tokenResponse = await axios.post(`${import.meta.env.VITE_API_URL}/jwt`, userInfo);
+                if (tokenResponse.data.token) {
+                    localStorage.setItem('access-token', tokenResponse.data.token);
+                }
+
+                navigate('/dashboard', { replace: true });
+            } else {
+                localStorage.removeItem('access-token');
+                localStorage.removeItem('user-data');
+            }
         } catch (error) {
-            setError(error)
-            console.log(error);
+            setError('Login failed. Please check your credentials.');
+            console.error(error);
+        } finally {
+            setLoading(false);
         }
-     
     };
 
     return (
@@ -64,7 +60,6 @@ export function LogIn() {
                         height="540"
                         width="540"
                         alt="login image"
-                        
                     />
                     <p className="text-3xl mt-4 ">
                         LogIn to your Bkash Account
@@ -75,7 +70,6 @@ export function LogIn() {
                         Log In
                     </h6>
                     <form onSubmit={handleLogIn} action="">
-                       
                         <label htmlFor="number">Mobile Number</label> <br />
                         <input
                             type="number"
@@ -102,8 +96,6 @@ export function LogIn() {
                         </button>
                     </form>
                     <div>
-
-
                         <h6 className="my-12 text-center text-white">
                             Don&apos;t have account ?{" "}
                             <Link className="text-primary font-semibold" to={"/sign-up"}>

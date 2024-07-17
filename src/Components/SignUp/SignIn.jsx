@@ -1,20 +1,20 @@
-import axios from "axios"
+import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../../Utils/useAuthProvider";
 import swal from "sweetalert";
 
-
 export function SignIn() {
-    const {setUser,setLoading}=useAuth()
-    const [error, setError] = useState()
-    const navigate = useNavigate()
+    const { setLoading, setUser } = useAuth();
+    const [error, setError] = useState(null);
+    const navigate = useNavigate();
+
     const handleSignUp = async (event) => {
         event.preventDefault();
         const password = event.target.password.value;
-        if (password.length != 5) {
-            setError("Pin must be 5 characters")
-            return false
+        if (password.length !== 5) {
+            setError("Pin must be 5 characters");
+            return;
         }
         const newUser = {
             name: event.target.name.value,
@@ -22,44 +22,39 @@ export function SignIn() {
             password: event.target.password.value,
             phone: event.target.phone.value,
         };
-        
+
+        setLoading(true);
         try {
-            axios.post(`${import.meta.env.VITE_API_URL}/users`, newUser)
-                .then(data => {
-                    
-                    if (data.data.status == 200) {
-                       
-                        event.target.reset()
-                        setUser(data.data)
-                        swal({
-                            title: 'Success',
-                            text: 'Successfully logged in',
-                            icon: 'success',
-                            timer: 1500
-                        })
-                        const currentUser = data.data
-                        if (currentUser) {
-                            const userInfo = { email: currentUser.email }
-                            axios.post(`${import.meta.env.VITE_API_URL}/jwt`, userInfo)
-                                .then(res => {
-                                    if (res.data.token) {
-                                        localStorage.setItem('access-token', res.data.token)
-                                    }
-                                })
-                            
-                            navigate('/dashboard', { replace: true })
-                            setLoading(false)
-                        }
-                        else {
-                            localStorage.removeItem('access-token')
-                        }
-                    }
-                })
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/users`, newUser);
+            const data = response.data;
+            if (data.status === 200) {
+                swal({
+                    title: 'Success',
+                    text: 'Successfully signed up',
+                    icon: 'success',
+                    timer: 1500
+                });
+
+                localStorage.setItem('user-data', JSON.stringify(data));
+                setUser(data);
+
+                const userInfo = { email: data.email };
+                const tokenResponse = await axios.post(`${import.meta.env.VITE_API_URL}/jwt`, userInfo);
+                if (tokenResponse.data.token) {
+                    localStorage.setItem('access-token', tokenResponse.data.token);
+                }
+
+                navigate('/dashboard', { replace: true });
+            } else {
+                localStorage.removeItem('access-token');
+                localStorage.removeItem('user-data');
+            }
         } catch (error) {
-            console.log(error);
-            setError(error)
+            setError('Sign up failed. Please try again.');
+            console.error(error);
+        } finally {
+            setLoading(false);
         }
-       
     };
 
     return (
@@ -71,10 +66,9 @@ export function SignIn() {
                         height="540"
                         width="540"
                         alt="login image"
-                        className="hidden md:block"
                     />
                     <p className="text-3xl mt-4 ">
-                            Create a new Bkash Account
+                        Create a new Bkash Account
                     </p>
                 </div>
                 <div className="border-2 p-12 text-black">
@@ -89,7 +83,7 @@ export function SignIn() {
                             placeholder="your name"
                             className="mt-3 w-full input input-bordered px-3 py-2 rounded-xl"
                         />
-                        <br /> 
+                        <br />
                         <label htmlFor="number">Mobile Number</label> <br />
                         <input
                             type="number"
@@ -97,7 +91,7 @@ export function SignIn() {
                             placeholder="your number"
                             className="mt-3 w-full input input-bordered px-3 py-2 rounded-xl"
                         />
-                        <br /> 
+                        <br />
                         <label htmlFor="email">Email</label> <br />
                         <input
                             type="text"
@@ -105,7 +99,7 @@ export function SignIn() {
                             placeholder="your email"
                             className="mt-3 w-full input input-bordered px-3 py-2 rounded-xl"
                         />
-                        <br /> 
+                        <br />
                         <label htmlFor="password">Password</label> <br />
                         <input
                             type="number"
@@ -124,8 +118,6 @@ export function SignIn() {
                         </button>
                     </form>
                     <div>
-                     
-                        
                         <h6 className="my-12 text-center text-white">
                             Already have account ?{" "}
                             <Link className="text-primary font-semibold" to={"/"}>

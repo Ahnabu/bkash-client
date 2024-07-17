@@ -3,8 +3,9 @@ import Sidebar from "./Sidebar";
 import useAuth from "../../Utils/useAuthProvider";
 
 const Dashboard = () => {
-    const { user, setLoading } = useAuth();
-    if (user) return setLoading(false);
+    const { loading } = useAuth();
+    
+    console.log(loading);
     return (
         <div className="">
             <Sidebar></Sidebar>
