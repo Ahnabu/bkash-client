@@ -1,25 +1,25 @@
 import MenuItem from "./MenuItem";
-import { MdAnalytics } from "react-icons/md";
-import { LiaCampgroundSolid } from "react-icons/lia";
+import { IoSend } from "react-icons/io5";
+import { FcMoneyTransfer } from "react-icons/fc";
 import { FaHistory } from "react-icons/fa";
 const UserMenu = () => {
     return (
         <div>
             <MenuItem
-                label='Analytics'
-                address='analytics'
+                label='Send Money'
+                address='send-money'
                 className="rounded"
-                icon={MdAnalytics}
+                icon={IoSend}
             />
             <MenuItem
-                icon={LiaCampgroundSolid}
-                label='Registered Camps'
-                address='registered-camps'
+                icon={FcMoneyTransfer}
+                label='Cash Out'
+                address='cash-out'
             />
             <MenuItem
                 icon={FaHistory}
-                label='Payment History'
-                address='payment-history'
+                label='Transaction History'
+                address='transaction-history'
             />
         </div>
     );

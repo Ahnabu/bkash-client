@@ -3,6 +3,10 @@ import { SignIn } from "../Components/SignUp/SignIn";
 import { LogIn } from "../Components/LogIn/LogIn";
 import Dashboard from "../Components/Dashboard/Dashboard";
 import PrivateRoute from "./PrivetRote/PrivetRoute";
+import TransactionHistory from "../Components/Dashboard/UserComponents/UserHistory";
+import Error from "../../Error";
+import SendMoney from "../Components/Dashboard/UserComponents/SendMoney";
+import CashOut from "../Components/Dashboard/UserComponents/CashOut";
 
 
 export const router = createBrowserRouter([
@@ -16,9 +20,21 @@ export const router = createBrowserRouter([
     },
     {
         path: "/dashboard",
-        element:<PrivateRoute> <Dashboard></Dashboard> </PrivateRoute>,
+        element: <PrivateRoute> <Dashboard></Dashboard> </PrivateRoute>,
+        errorElement:<Error/>,
         children: [
-            
+            {
+                path: 'transaction-history',
+                element: <TransactionHistory/>
+            },
+            {
+                path: 'send-money',
+                element: <SendMoney/>
+            },
+            {
+                path: 'cash-out',
+                element: <CashOut/>
+            },
         ]
     },
     
