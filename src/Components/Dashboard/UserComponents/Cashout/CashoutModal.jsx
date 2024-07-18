@@ -10,10 +10,12 @@ import { useState } from 'react'
 
 
 import { MdOutlinePayment } from 'react-icons/md';
+import CheckoutForm from '../../CheckOut/CheckoutForm';
 
 
 
-const CashOut = ({ participant, refetch }) => {
+
+const CashOutModal = () => {
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(!open);
@@ -21,14 +23,14 @@ const CashOut = ({ participant, refetch }) => {
     return (
         <>
             <Button variant='outlined' className={`bg-primary text-secondary flex gap-2 border-secondary`} onClick={handleOpen}>
-                <MdOutlinePayment className='text-xl -m-1'></MdOutlinePayment> Pay </Button>
+                <MdOutlinePayment className='text-xl -m-1'></MdOutlinePayment> CashOut </Button>
 
             <Dialog open={open} handler={handleOpen}>
                 <DialogHeader
                     as='h3'
                     className='text-lg font-medium text-center leading-6 text-gray-900'
                 >
-                    Review Info Before Pay
+                    Review Info Before Transaction
                 </DialogHeader>
                 <DialogBody>
                     <div className='fixed inset-0 overflow-y-auto'>
@@ -38,36 +40,40 @@ const CashOut = ({ participant, refetch }) => {
 
                                 <div className='mt-2'>
                                     <p className='text-sm text-gray-500'>
-                                        Camp: {participant.campName}
+                                        Camp: 
                                     </p>
                                 </div>
                                 <div className='mt-2'>
                                     <p className='text-sm text-gray-500'>
-                                        Location: {participant.location}
+                                        Location: 
                                     </p>
                                 </div>
                                 <div className='mt-2'>
                                     <p className='text-sm text-gray-500'>
-                                        Name: {participant.participant_name}
+                                        Name: 
                                     </p>
                                 </div>
                                 <div className='mt-2'>
                                     <p className='text-sm text-gray-500'>
                                         Date & Time
-                                        {participant.dateTime}
+                                        
                                     </p>
                                 </div>
 
 
                                 <div className='mt-2'>
                                     <p className='text-sm text-gray-500'>
-                                        Price: $ {participant.campFees}
+                                        Price: $ 
                                     </p>
                                 </div>
                                 <hr className='mt-8 ' />
 
 
-                                
+                                <CheckoutForm
+                                   
+                                    closeModal={handleOpen}
+                                    // refetch={refetch}
+                                />
                                 
                             </div>
 
@@ -80,11 +86,11 @@ const CashOut = ({ participant, refetch }) => {
     )
 }
 
-CashOut.propTypes = {
+CashOutModal.propTypes = {
     participant: PropTypes.object,
     closeModal: PropTypes.func,
     isOpen: PropTypes.bool,
     refetch: PropTypes.func,
 }
 
-export default CashOut
+export default CashOutModal

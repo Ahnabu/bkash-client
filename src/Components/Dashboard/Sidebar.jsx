@@ -92,8 +92,8 @@ const Sidebar = () => {
                         <div className='w-full hidden md:flex px-4 py-2 shadow-lg rounded-lg justify-center items-center  mx-auto'>
                             <Link to='/'>
                                 <div className='flex gap-1'>
-                                    <img src="/logo.jpeg" alt="" className='w-6 h-6' />
-                                    <h3 className='text-white font-bold text-xl'>Health Caduceus </h3>
+                                    <img src="/bkash-logo.png" alt="" className='w-12 h-6' />
+                                    <h3 className='text-white font-bold text-xl'>Bkash</h3>
 
                                 </div>
                             </Link>
